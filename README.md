@@ -13,3 +13,23 @@ Se realiza la concatenación de los archivos descargados desde **Sodimac** con l
 
 ## 4. Subida Automática
 Una vez concatenados los archivos, se ejecuta el proceso de subida automática a la plataforma correspondiente, garantizando que todos los datos estén actualizados y listos para su uso.
+
+
+# Documentación de `descargar_archivos.py`
+
+Este script automatiza la descarga de archivos desde SharePoint basándose en rutas específicas, filtrando los archivos por un patrón determinado (en este caso, archivos que terminan en "2024" después del último guion bajo).
+
+## Dependencias
+
+Este script requiere las siguientes bibliotecas:
+
+- `os`: Para la manipulación de rutas y directorios locales.
+- `pandas`: Para manejar y procesar datos (aunque no se utiliza en el código proporcionado, se incluye en caso de futuras modificaciones).
+- `datetime`: Para trabajar con fechas y horas.
+- `pytz`: Para manejar zonas horarias.
+- `shareplum`: Para interactuar con la API de SharePoint.
+
+Para instalar las dependencias necesarias, puedes usar el siguiente comando:
+
+```bash
+pip install pandas pytz shareplum
