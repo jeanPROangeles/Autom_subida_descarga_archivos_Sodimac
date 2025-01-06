@@ -33,3 +33,26 @@ Para instalar las dependencias necesarias, puedes usar el siguiente comando:
 
 ```bash
 pip install pandas pytz shareplum
+
+
+# Documentación de `subir_archivos.py`
+
+Este script automatiza el proceso de carga de archivos procesados hacia **SharePoint**, realizando varias acciones como el manejo de archivos de Excel, reintentos en caso de fallos de subida y formateo de las hojas de cálculo. 
+
+## Dependencias
+
+Este script requiere las siguientes bibliotecas:
+
+- `os`: Para la manipulación de rutas y directorios locales.
+- `pandas`: Para leer y escribir archivos Excel.
+- `shareplum`: Para interactuar con la API de SharePoint.
+- `time`: Para manejar pausas y tiempos de espera.
+- `logging`: Para registrar información de eventos.
+- `castear`: Para procesar los archivos (suponiendo que esta es una librería personalizada o interna).
+- `urllib3`: Para manejar advertencias de SSL.
+
+Para instalar las dependencias necesarias, puedes usar el siguiente comando:
+
+```bash
+pip install pandas shareplum
+
