@@ -257,10 +257,9 @@ Para ejecutar este script, es necesario instalar las siguientes librerías:
 ```bash
 pip install selenium pandas openpyxl xlrd requests tkinter webdriver-manager
 ```
+---
 
-# Documentación del Código
-
-Este código está diseñado para descargar, procesar y manipular archivos de datos relacionados con las unidades y ventas de las tiendas de Sodimac y Maestro. Utiliza Selenium para la automatización del navegador, Pandas para la manipulación de datos y varias librerías de Python para el manejo de archivos.
+Asimismo este código está diseñado para descargar, procesar y manipular archivos de datos relacionados con las unidades y ventas de las tiendas de Sodimac y Maestro. Utiliza Selenium para la automatización del navegador, Pandas para la manipulación de datos y varias librerías de Python para el manejo de archivos.
 
 ## Librerías Importadas
 
