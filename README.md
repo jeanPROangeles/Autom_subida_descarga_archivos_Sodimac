@@ -440,16 +440,16 @@ Antes de ejecutar el script, asegúrate de tener lo siguiente configurado:
 
 ## Procedimiento de Ejecución
 
--  `Paso 1`: Ejecutar el Script SodimacMaestro 1.py
+-  `Paso 1`: Ejecutar el Script **SodimacMaestro 1.py**
 Abre tu terminal o consola de comandos.
 
 Navega a la carpeta donde se encuentra el archivo SodimacMaestro 1.py.
 
 Ejecuta el script con el siguiente comando:
 
-bash
-Copiar código
+```bash
 python "SodimacMaestro 1.py"
+```
 - `Paso 2`: Ingreso Automático al Portal
 Al ejecutar el script, se abrirá automáticamente el navegador (según la configuración en el código: Chrome o Edge) y se redirigirá al portal de Sodimac y Maestro.
 
@@ -461,10 +461,10 @@ Contraseña: softys.2052
 - `Paso 3`: Selección de la Fecha para la Descarga
 Una vez que el portal se haya cargado, el script te pedirá que selecciones la fecha para la descarga de los archivos.
 
-Ventana de Confirmación:
+**Ventana de Confirmación**:
 El script mostrará una ventana emergente que te pedirá confirmar que ya estás listo para seleccionar la fecha. Si haces clic en "Sí", el script procederá automáticamente a seleccionar la fecha correspondiente.
 
-Selección Automática de la Fecha:
+**Selección Automática de la Fecha**:
 El script seleccionará la fecha del día automáticamente para realizar la descarga.
 
 - `Paso 4`: Espera a que se Complete el Proceso
@@ -476,3 +476,10 @@ Después de la descarga, los archivos serán movidos a las carpetas correspondie
 
 - `Paso 5`: Revisión de los Archivos Descargados
 Al finalizar la ejecución del script, verifica las carpetas donde los archivos fueron movidos para asegurarte de que todo se haya descargado y procesado correctamente.
+
+---
+## Notas Adicionales:
+
+- Si el portal presenta cambios en su estructura o si las credenciales cambian, será necesario actualizar el código para reflejar estos cambios.
+- Asegúrate de tener la versión más reciente de ChromeDriver o EdgeDriver compatible con tu navegador.
+- Si el navegador no se inicia correctamente o el inicio de sesión falla, revisa las credenciales y la configuración del WebDriver.
