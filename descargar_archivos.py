@@ -5,6 +5,7 @@ import pytz
 from shareplum import Office365
 from shareplum import Site
 from shareplum.site import Version
+import logging
 
 # Función para obtener la conexión a SharePoint
 def obtener_conexion_sharepoint():
@@ -12,11 +13,22 @@ def obtener_conexion_sharepoint():
     password = "Grow123*$%"  
     url = "https://growanalyticscom.sharepoint.com"
     site_url = "https://growanalyticscom.sharepoint.com/sites/PROYECTOS/"
-    
-    # Autenticación
-    authcookie = Office365(url, username=username, password=password).GetCookies()
-    site = Site(site_url, version=Version.v2016, authcookie=authcookie)
-    return site
+
+    try:
+        # Autenticación y conexión a SharePoint
+        authcookie = Office365(url, username=username, password=password).GetCookies()
+        site = Site(site_url, version=Version.v2016, authcookie=authcookie)
+
+        # Configuración del timeout para las solicitudes
+        session = site._session  
+        session.timeout = (60, 1800)  # Timeout de 30 segundos a 20 minutos
+        session.verify = False
+        logging.info("Conexión a SharePoint exitosa")
+        return site
+    except Exception as e:
+        logging.error(f"Error al conectar a SharePoint: {e}")
+        return None
+
 
 # Función para obtener las rutas actualizadas
 def obtener_rutas_so():

@@ -11,34 +11,12 @@ from io import BytesIO
 import time
 import random
 import urllib3
-
+from descargar_archivos import obtener_conexion_sharepoint
 # Desactivar advertencias de SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Configuración de logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Función para obtener la conexión a SharePoint
-def obtener_conexion_sharepoint():
-    username = "jean.pier@grow-analytics.com.pe"
-    password = "Grow123*$%"  
-    url = "https://growanalyticscom.sharepoint.com"
-    site_url = "https://growanalyticscom.sharepoint.com/sites/PROYECTOS/"
-
-    try:
-        # Autenticación y conexión a SharePoint
-        authcookie = Office365(url, username=username, password=password).GetCookies()
-        site = Site(site_url, version=Version.v2016, authcookie=authcookie)
-
-        # Configuración del timeout para las solicitudes
-        session = site._session  
-        session.timeout = (60, 1800)  # Timeout de 30 segundos a 20 minutos
-        session.verify = False
-        logging.info("Conexión a SharePoint exitosa")
-        return site
-    except Exception as e:
-        logging.error(f"Error al conectar a SharePoint: {e}")
-        return None
 
 # Función para obtener el nombre de la tabla y la ruta correcta de SharePoint (según la clave)
 def obtener_nombre_tabla_y_ruta(clave):
@@ -144,47 +122,62 @@ def procesar_y_subir_archivos():
         nombre_base = os.path.splitext(nombre_archivo_descargado)[0]
         nombre_subida = "Prueba_001_" + nombre_base + "_prueba.xlsx"
         
-        chunk_size = 100000
+        # Procesar los datos por fragmentos, pero no subas hasta que se haya procesado todo
+        chunk_size = 100000  # Tamaño de los chunks
         chunks = [df_concatenado[i:i + chunk_size] for i in range(0, len(df_concatenado), chunk_size)]
-        logging.info(f"Archivo dividido en {len(chunks)} fragmentos para subir.")
+        logging.info(f"Archivo dividido en {len(chunks)} fragmentos para procesar.")
 
-        # Procesar y cargar cada fragmento por separado
+        # Procesar cada fragmento
+        processed_chunks = []
         for idx, chunk in enumerate(chunks):
             logging.info(f"Procesando fragmento {idx + 1}/{len(chunks)}")
-            # Guardar el archivo casteado a un buffer en memoria (sin guardar en disco)
-            with BytesIO() as excel_buffer:
-                with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
-                    chunk.to_excel(writer, index=False, sheet_name='Sheet1')
-                    workbook = writer.book
-                    worksheet = writer.sheets['Sheet1']
+            
+            try:
+                # Casteo cada fragmento
+                process_file(chunk)  # Casteo por fragmento
+                logging.info(f"Fragmento casteado correctamente para {clave}")
+                processed_chunks.append(chunk)  # Agregar fragmento procesado a la lista
+            except Exception as e:
+                logging.error(f"Error al procesar el fragmento casteado para {clave}: {e}")
+                continue
 
-                    # Formatos
-                    date_format = workbook.add_format({'num_format': 'dd/mm/yyyy', 'align': 'right'})  # Formato de fecha
-                    text_format = workbook.add_format({'num_format': '@'})  # Formato de texto
+        # Una vez procesados todos los chunks, concatenar nuevamente el archivo
+        df_final = pd.concat(processed_chunks, ignore_index=True)
+        logging.info(f"Archivo final procesado con {len(df_final)} filas.")
 
-                    # Formato para la columna 'DATE_TRANSACTION' si existe
-                    if 'DATE_TRANSACTION' in chunk.columns:
-                        date_col_idx = chunk.columns.get_loc('DATE_TRANSACTION')
-                        worksheet.set_column(date_col_idx, date_col_idx, 30, date_format)
-                    
-                    # Formato para las columnas de texto
-                    worksheet.set_column('B:C', None, text_format)
+        # Subir todo el archivo concatenado
+        nombre_tabla, ruta_sharepoint = obtener_nombre_tabla_y_ruta(clave)
+        if ruta_sharepoint is None:
+            continue
 
-                    # Crear tabla estructurada en Excel
-                    worksheet.add_table(0, 0, len(chunk), len(chunk.columns) - 1,
-                                        {'name': nombre_tabla, 'columns': [{'header': col} for col in chunk.columns]})
+        folder = site.Folder(ruta_sharepoint)
+        nombre_subida = f"Prueba_001_{os.path.splitext(nombre_archivo_descargado)[0]}_prueba.xlsx"
 
-                # Finalizar y cargar el contenido en memoria
-                excel_buffer.seek(0)
-                file_data = excel_buffer.read()
+        # Guardar el archivo completo casteado a un buffer en memoria (sin guardar en disco)
+        with BytesIO() as excel_buffer:
+            with pd.ExcelWriter(excel_buffer, engine='xlsxwriter') as writer:
+                df_final.to_excel(writer, index=False, sheet_name='Sheet1')
+                workbook = writer.book
+                worksheet = writer.sheets['Sheet1']
 
-                # Verificar que el archivo tiene contenido
-                if not file_data:
-                    logging.error(f"El archivo está vacío para {clave}. No se subirá a SharePoint.")
-                    continue
-                else:
-                    upload_with_retries(folder, file_data, nombre_subida)
-                    logging.info(f"Archivo casteado subido a SharePoint: {ruta_sharepoint}/{nombre_subida}")
+                # Formatos para la hoja de cálculo
+                date_format = workbook.add_format({'num_format': 'dd/mm/yyyy', 'align': 'right'})
+                text_format = workbook.add_format({'num_format': '@'})
+                if 'DATE_TRANSACTION' in df_final.columns:
+                    date_col_idx = df_final.columns.get_loc('DATE_TRANSACTION')
+                    worksheet.set_column(date_col_idx, date_col_idx, 30, date_format)
+
+                worksheet.set_column('B:C', None, text_format)
+                worksheet.add_table(0, 0, len(df_final), len(df_final.columns) - 1, {'name': nombre_tabla, 'columns': [{'header': col} for col in df_final.columns]})
+
+            excel_buffer.seek(0)
+            file_data = excel_buffer.read()
+
+            if file_data:
+                upload_with_retries(folder, file_data, nombre_subida)
+                logging.info(f"Archivo completo subido a SharePoint: {ruta_sharepoint}/{nombre_subida}")
+            else:
+                logging.error(f"El archivo final está vacío para {clave}. No se subirá a SharePoint.")
 
 # Ejecutar el proceso
 procesar_y_subir_archivos()
