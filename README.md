@@ -202,3 +202,212 @@ df = pd.DataFrame(data)
 df_procesado = process_file(df)
 
 print(df_procesado)
+```
+
+
+
+# Documentación del Proyecto: `Limpieza de Sodimac y Maestro`
+
+## Descripción
+Este proyecto está diseñado para automatizar el proceso de descarga, organización y limpieza de archivos provenientes de las plataformas **Sodimac** y **Maestro**. Utiliza Selenium para la automatización web, pandas para manipulación de datos, y diversas técnicas de manejo de archivos en Python.
+
+## Funcionalidades
+
+### 1. **Descarga de Archivos**
+La función `descargarArchivos` automatiza la descarga de archivos desde la página de **Sodimac**. El script accede al portal, introduce las credenciales, selecciona las tiendas y descarga los archivos correspondientes. Existen dos categorías: **Unidades** y **Soles**, y para cada una de ellas, los archivos se guardan en carpetas separadas.
+
+### 2. **Creación de Carpetas**
+El proyecto utiliza varias funciones para crear carpetas basadas en la fecha actual y en las categorías de los archivos descargados:
+- `crearCarpetaFecha`: Crea una carpeta con la fecha actual y una subcarpeta con la hora para realizar copias de seguridad de los archivos.
+- `crearCarpetasUnidadesSoles`: Crea carpetas para diferentes categorías como **unidades-maestro**, **unidades-sodimac**, **soles_maestro**, etc.
+
+### 3. **Mover Archivos**
+Una vez descargados los archivos, se mueven a sus respectivas carpetas utilizando la función `moverArchivos`. Esta función garantiza que no haya archivos duplicados mediante el uso de un contador.
+
+### 4. **Limpieza y Concatenación de Archivos**
+Las funciones `concatenarArchivos`, `limpiezaArchivosStock` y `limpiezaArchivosVentas` permiten limpiar y combinar los archivos descargados para obtener una estructura de datos consolidada.
+
+- `concatenarArchivos`: Concatena los archivos descargados en una sola hoja de Excel.
+- `limpiezaArchivosStock`: Filtra y organiza los datos relacionados con el stock de productos.
+- `limpiezaArchivosVentas`: Filtra y organiza los datos relacionados con las ventas de productos.
+
+### 5. **Generación de Datos**
+Las funciones `stock` y `sell` generan dos conjuntos de datos:
+- **Stock**: Calcula el stock de productos combinando los datos de unidades y soles.
+- **Ventas**: Genera un reporte de ventas a partir de los datos de soles.
+
+Ambas funciones aseguran que los datos se formateen correctamente para su posterior uso en otros procesos.
+
+### 6. **Fecha**
+La función `obtener_fecha_un_dia_antes` calcula la fecha del día anterior en un formato específico. Este dato es útil para la creación de registros históricos.
+
+## Librerías Utilizadas
+
+- **Selenium**: Automatización de navegadores para la descarga de archivos.
+- **Pandas**: Manipulación y análisis de datos.
+- **Tkinter**: Interfaz gráfica para la confirmación de acciones.
+- **Openpyxl**: Manipulación de archivos Excel.
+- **Shutil**: Manejo de archivos y directorios.
+
+## Instrucciones de Ejecución
+
+### 1. Instalación de Dependencias
+Para ejecutar este script, es necesario instalar las siguientes librerías:
+
+```bash
+pip install selenium pandas openpyxl xlrd requests tkinter webdriver-manager
+```
+
+# Documentación del Código
+
+Este código está diseñado para descargar, procesar y manipular archivos de datos relacionados con las unidades y ventas de las tiendas de Sodimac y Maestro. Utiliza Selenium para la automatización del navegador, Pandas para la manipulación de datos y varias librerías de Python para el manejo de archivos.
+
+## Librerías Importadas
+
+### Selenium y WebDriver:
+- `selenium`: Para la automatización de navegación web.
+- `selenium.webdriver`: Permite la interacción con los elementos de la página.
+- `selenium.webdriver.support`: Proporciona condiciones de espera y otros métodos útiles.
+- `selenium.webdriver.chrome.service` y `selenium.webdriver.edge.service`: Para iniciar el servicio del navegador Edge o Chrome.
+
+### Manejo de Archivos y Datos:
+- `pandas`: Librería principal para manipulación de datos.
+- `os`, `shutil`, `glob`: Para interactuar con el sistema de archivos (crear carpetas, mover archivos, etc.).
+- `xlrd`, `openpyxl`: Para leer y escribir archivos de Excel.
+- `xlsxwriter`: Para generar archivos de Excel.
+- `requests`: Para realizar solicitudes HTTP (no se usa activamente en el código).
+- `tkinter`: Interfaz gráfica para mostrar mensajes de confirmación.
+
+### Funciones Principales
+
+#### `descargarArchivos`
+
+Esta función descarga archivos desde el portal de Sodimac y Maestro, y mueve los archivos descargados a las carpetas correspondientes.
+
+- **Parámetros**:
+  - `downloads_path`: Ruta de la carpeta donde se almacenan los archivos descargados.
+  - `uni_maestro`, `uni_sodimac`, `soles_maestro`, `soles_sodimac`, `clientes_sodimac`, `clientes_maestro`: Rutas de las carpetas donde se moverán los archivos descargados.
+  
+- **Flujo**:
+  - Abre una página web de Sodimac y Maestro.
+  - Inicia sesión con credenciales predefinidas.
+  - Selecciona diferentes códigos de tienda y descarga archivos en formato `.xls`.
+  - Los archivos descargados se mueven a las carpetas correspondientes según el tipo de archivo (Unidades o Soles, Maestro o Sodimac).
+
+#### `crearCarpetasUnidadesSoles`
+
+Crea una nueva carpeta si no existe.
+
+- **Parámetros**:
+  - `folder_path`: Ruta base donde se creará la nueva carpeta.
+  - `nombre`: Nombre de la carpeta a crear.
+  
+- **Retorna**: La ruta completa de la nueva carpeta creada.
+
+#### `fechaActual`
+
+Obtiene la fecha actual en formato `dd-mm-yyyy`.
+
+- **Retorna**: La fecha actual en formato `dd-mm-yyyy`.
+
+#### `crearCarpeta`
+
+Crea una carpeta llamada `Descargas` en el directorio donde se encuentra el script, si no existe.
+
+- **Retorna**: Ruta de la carpeta creada o ya existente.
+
+#### `extraerCarpetaDescargas`
+
+Obtiene la ruta de la carpeta de descargas del sistema operativo.
+
+- **Retorna**: Ruta de la carpeta de descargas.
+
+#### `crearCarpetaFecha`
+
+Crea una carpeta con la fecha actual y la hora actual como nombre.
+
+- **Retorna**: La ruta completa de la carpeta creada.
+
+#### `moverArchivos`
+
+Mueve un archivo desde una ubicación original a una carpeta destino. Si el archivo ya existe en la carpeta destino, se renombra para evitar sobrescribirlo.
+
+- **Parámetros**:
+  - `original`: Ruta del archivo original.
+  - `destino`: Ruta de la carpeta destino donde se moverá el archivo.
+
+#### `concatenarArchivos`
+
+Concatena los archivos de Excel ubicados en una carpeta dada y los guarda en un nuevo archivo combinado.
+
+- **Parámetros**:
+  - `uni_maestro`: Ruta de la carpeta con los archivos de unidades Maestro.
+  - `maestra`: DataFrame de referencia para agregar columnas de códigos y clientes.
+  
+#### `poner_codigo_sodimac_maestro`
+
+Agrega los códigos de clientes de Sodimac a un DataFrame que contiene información de unidades.
+
+- **Parámetros**:
+  - `df`: DataFrame que contiene los datos de unidades.
+  - `maestra`: DataFrame con los códigos de clientes de referencia.
+  
+- **Retorna**: El DataFrame con los códigos de clientes agregados.
+
+#### `limpiezaArchivosStock`
+
+Limpia y organiza los archivos de stock de unidades y soles, seleccionando solo las columnas relevantes y concatenándolos en un único DataFrame.
+
+- **Parámetros**:
+  - `unidades`: Ruta de la carpeta de unidades.
+  - `soles`: Ruta de la carpeta de soles.
+  
+- **Retorna**: DataFrame concatenado de las unidades y soles con columnas relevantes.
+
+#### `limpiezaArchivosVentas`
+
+Limpia y organiza los archivos de ventas, seleccionando solo las columnas relevantes.
+
+- **Parámetros**:
+  - `soles`: Ruta de la carpeta de soles.
+  
+- **Retorna**: DataFrame de ventas con las columnas relevantes.
+
+#### `obtener_fecha_un_dia_antes`
+
+Obtiene la fecha de ayer en formato `dd/mm/yyyy`.
+
+- **Retorna**: La fecha de ayer en formato `dd/mm/yyyy`.
+
+#### `stock`
+
+Genera un DataFrame con información de stock, combinando los datos de unidades y soles y agregando columnas adicionales.
+
+- **Parámetros**:
+  - `soles_cadena`: DataFrame con los datos de soles.
+  - `unidades_cadena`: DataFrame con los datos de unidades.
+  - `codigo`: Código de cliente.
+
+- **Retorna**: DataFrame con la información de stock.
+
+#### `sell`
+
+Genera un DataFrame con información de ventas, agregando columnas adicionales como el código de cliente y la fecha de la transacción.
+
+- **Parámetros**:
+  - `soles_cadena`: DataFrame con los datos de soles.
+  - `codigo`: Código de cliente.
+
+- **Retorna**: DataFrame con la información de ventas.
+
+---
+
+## Notas
+- El código hace uso de Selenium para interactuar con páginas web de manera automatizada, especialmente para la descarga de archivos desde un portal de Sodimac y Maestro.
+- La función principal, `descargarArchivos`, automatiza el proceso de selección de códigos de tienda y descarga de archivos, moviéndolos a las carpetas de destino correspondientes.
+- Varias funciones están orientadas a la creación de carpetas, la manipulación de archivos Excel y la limpieza de datos, utilizando principalmente Pandas para el manejo de los datos.
+
+---
+
+Este código es útil para procesos de automatización de descargas y procesamiento de datos en un entorno de ventas y gestión de stock.
+
