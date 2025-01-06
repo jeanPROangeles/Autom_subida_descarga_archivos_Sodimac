@@ -410,3 +410,69 @@ Genera un DataFrame con información de ventas, agregando columnas adicionales c
 
 Este código es útil para procesos de automatización de descargas y procesamiento de datos en un entorno de ventas y gestión de stock.
 
+---
+
+# Ejecución del Script para Descarga de Archivos desde Sodimac y Maestro
+
+Este script automatiza el proceso de descarga de archivos desde el portal de **Sodimac** y **Maestro**. A continuación se describe cómo ejecutar el script y realizar las descargas.
+
+## Requisitos Previos
+
+Antes de ejecutar el script, asegúrate de tener lo siguiente configurado:
+
+1. **Python** instalado en tu máquina (se recomienda versión 3.x).
+2. Las siguientes librerías de Python deben estar instaladas:
+   - `selenium`
+   - `pandas`
+   - `openpyxl`
+   - `xlsxwriter`
+   - `xlrd`
+   - `tkinter`
+
+   Puedes instalar las librerías necesarias ejecutando el siguiente comando:
+
+   ```bash
+   pip install selenium pandas openpyxl xlsxwriter xlrd tkinter
+
+3. **ChromeDriver o EdgeDriver** debe estar correctamente configurado y accesible para que Selenium funcione. Asegúrate de tener la versión correcta de Chrome o Edge y el controlador correspondiente en tu máquina.
+
+4. **Credenciales** de acceso al portal de **Sodimac** y **Maestro** (ya preconfiguradas en el script).
+
+## Procedimiento de Ejecución
+
+-  `Paso 1`: Ejecutar el Script SodimacMaestro 1.py
+Abre tu terminal o consola de comandos.
+
+Navega a la carpeta donde se encuentra el archivo SodimacMaestro 1.py.
+
+Ejecuta el script con el siguiente comando:
+
+bash
+Copiar código
+python "SodimacMaestro 1.py"
+- `Paso 2`: Ingreso Automático al Portal
+Al ejecutar el script, se abrirá automáticamente el navegador (según la configuración en el código: Chrome o Edge) y se redirigirá al portal de Sodimac y Maestro.
+
+El script iniciará sesión automáticamente utilizando las credenciales predefinidas:
+
+Empresa: Sodimac Perú
+Usuario: 77350925
+Contraseña: softys.2052
+- `Paso 3`: Selección de la Fecha para la Descarga
+Una vez que el portal se haya cargado, el script te pedirá que selecciones la fecha para la descarga de los archivos.
+
+Ventana de Confirmación:
+El script mostrará una ventana emergente que te pedirá confirmar que ya estás listo para seleccionar la fecha. Si haces clic en "Sí", el script procederá automáticamente a seleccionar la fecha correspondiente.
+
+Selección Automática de la Fecha:
+El script seleccionará la fecha del día automáticamente para realizar la descarga.
+
+- `Paso 4`: Espera a que se Complete el Proceso
+Una vez seleccionada la fecha, el script procederá a descargar los archivos de las tiendas Sodimac y Maestro.
+
+Los archivos descargados estarán organizados en carpetas según las categorías predefinidas (por ejemplo, unidades, soles, clientes, etc.).
+
+Después de la descarga, los archivos serán movidos a las carpetas correspondientes para su procesamiento posterior.
+
+- `Paso 5`: Revisión de los Archivos Descargados
+Al finalizar la ejecución del script, verifica las carpetas donde los archivos fueron movidos para asegurarte de que todo se haya descargado y procesado correctamente.
