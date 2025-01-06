@@ -1,4 +1,4 @@
-# Automización de Carga de Archivos
+# Automatización de Carga de Archivos
 
 Este proceso automatiza el login en el sistema de **Sodimac**, la descarga de todas sus bases de datos, así como la concatenación de los archivos descargados desde **SharePoint** y su posterior carga automática.
 
