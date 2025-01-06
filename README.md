@@ -80,3 +80,27 @@ El script realiza el siguiente flujo de procesamiento de archivos:
 - `Subida a SharePoint`: Después de realizar el procesamiento, los datos transformados se suben de nuevo a SharePoint. La subida se hace en fragmentos si el archivo es muy grande, utilizando la función de reintentos para manejar posibles fallos de red.
 
 - `Manejo de errores y reintentos`: Si se produce un error durante el proceso de carga, el script intenta cargar el archivo nuevamente en función de un sistema de reintentos. Esto ayuda a manejar interrupciones temporales en la conexión o problemas con SharePoint.
+
+
+
+# Flujo de ejecución
+- `Conexión a SharePoint`: El script establece una conexión con SharePoint usando las credenciales y configuraciones de conexión definidas.
+
+- `Procesamiento de archivos`: El script procesa los archivos descargados (como archivos de ventas o inventarios), transformándolos según las reglas especificadas.
+
+- `Carga a SharePoint`: Los archivos procesados se cargan a la ruta especificada en SharePoint, asegurando que los datos estén listos para su uso en otros procesos o análisis.
+
+- `Manejo de errores`: En caso de fallos, el script se encarga de registrar los errores y reintentar el proceso hasta un número determinado de veces, lo cual es útil para gestionar problemas de conectividad.
+
+
+# Parámetros de configuración
+- `Usuario y Contraseña de SharePoint`: El script utiliza credenciales codificadas de usuario y contraseña. Se recomienda utilizar un método de autenticación más seguro para entornos de producción, como la autenticación de Azure AD o mediante un servicio de autenticación.
+
+- `Rutas de los archivos en SharePoint`: Las rutas de los archivos que deben ser procesados se configuran directamente en el script. Estas rutas deben ser precisas y tener los permisos adecuados para leer y escribir archivos en las ubicaciones de SharePoint.
+
+- `Archivos a procesar`: Los archivos que se procesan deben estar ubicados en el directorio de descargas o en una carpeta específica que el script debe identificar para procesarlos.
+
+# Consideraciones de seguridad
+- `Gestión de credenciales`: Las credenciales de SharePoint están almacenadas de forma directa en el script. Para un entorno de producción, se recomienda usar una solución de almacenamiento seguro de credenciales, como un gestor de secretos o la autenticación basada en tokens.
+
+- `Reintentos`: La estrategia de reintentos implementada con retrocesos exponenciales y jitter asegura que el script pueda manejar conexiones intermitentes sin fallar inmediatamente.
