@@ -34,3 +34,33 @@ Para instalar las dependencias necesarias, puedes usar el siguiente comando:
 
 ```bash
 pip install pandas pytz shareplum
+
+---
+
+# Documentación del script para procesar y subir archivos a SharePoint
+
+Este script se encarga de procesar archivos Excel, realizar transformaciones y casteo en los datos, y luego cargar los resultados procesados en SharePoint. A continuación, se detalla cómo funciona el script, sus componentes principales y su flujo de ejecución.
+
+---
+
+## Dependencias
+
+Este script requiere las siguientes bibliotecas para su correcto funcionamiento:
+
+- `os`: Para manejar rutas de archivos y directorios.
+- `pandas`: Para leer, manipular y escribir archivos Excel.
+- `shareplum`: Para interactuar con SharePoint y cargar archivos.
+- `time`: Para gestionar tiempos de espera (reintentos, retrocesos).
+- `random`: Para agregar un componente aleatorio a los tiempos de espera.
+- `urllib3`: Para gestionar advertencias de SSL.
+- `logging`: Para registrar eventos e información sobre la ejecución.
+- `io`: Para crear buffers en memoria para archivos Excel.
+- `castear`: Para procesar y transformar los archivos antes de cargarlos en SharePoint.
+- `descargar_archivos`: Para obtener las rutas correctas de los archivos de SharePoint.
+
+### Instalación de dependencias
+
+Para instalar las dependencias necesarias, utiliza `pip`:
+
+```bash
+pip install pandas shareplum urllib3 castear
