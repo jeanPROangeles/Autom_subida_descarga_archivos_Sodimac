@@ -131,3 +131,74 @@ El script realiza el siguiente flujo de procesamiento de archivos:
 - `Gestión de credenciales`: Las credenciales de SharePoint están almacenadas de forma directa en el script. Para un entorno de producción, se recomienda usar una solución de almacenamiento seguro de credenciales, como un gestor de secretos o la autenticación basada en tokens.
 
 - `Reintentos`: La estrategia de reintentos implementada con retrocesos exponenciales y jitter asegura que el script pueda manejar conexiones intermitentes sin fallar inmediatamente.
+
+---
+
+# Documentación de la función `process_file(df)`
+
+La función `process_file` procesa un archivo cargado como un `DataFrame` de **pandas**, realizando transformaciones en las columnas del archivo de acuerdo a un formato específico. A continuación se describe el funcionamiento de la función, sus entradas y salidas, así como los detalles del procesamiento de datos.
+
+---
+
+## Descripción general
+
+La función recibe un **DataFrame de pandas** y realiza las siguientes operaciones de procesamiento sobre las columnas del archivo:
+
+1. **Validación de columnas**: Verifica que el archivo tenga al menos tres columnas.
+2. **Conversión de formato de fecha**: Convierte la primera columna, que debe contener fechas, al formato `'dd/mm/yyyy'`.
+3. **Conversión de columnas numéricas a texto**: Las segunda y tercera columna se convierten a texto, eliminando cualquier punto decimal en los valores flotantes (si existiera alguno).
+
+---
+
+## Entradas
+
+### Parámetro
+
+- `df` (DataFrame de pandas): 
+  - Un **DataFrame** que contiene los datos del archivo que se va a procesar.
+  - Las primeras tres columnas deben tener los siguientes tipos de datos esperados:
+    - **Columna 1 (Fecha)**: Contiene datos de tipo fecha, que deben convertirse al formato `dd/mm/yyyy`.
+    - **Columna 2 y 3 (Numéricas)**: Contienen datos numéricos o decimales, los cuales deben ser transformados a texto y sin decimales.
+
+---
+
+## Salidas
+
+- **DataFrame procesado**: La función retorna el **DataFrame** con las modificaciones realizadas en las columnas, siguiendo las reglas especificadas.
+
+---
+
+## Detalles de procesamiento
+
+1. **Verificación de columnas**:
+    - La función verifica si el `DataFrame` tiene al menos tres columnas con `df.shape[1]`. Si el archivo tiene menos de tres columnas, se imprime un mensaje de advertencia y se retorna `None`.
+
+2. **Conversión de la primera columna a fecha**:
+    - La función convierte la primera columna (`DATE_TRANSACTION`) a un formato de fecha en el formato `'dd/mm/yyyy'`. Utiliza la función `pd.to_datetime` de pandas para convertir la columna, especificando que el día aparece antes del mes (con `dayfirst=True`).
+    - Los valores de la columna se formatean como cadenas con el formato deseado utilizando el método `.dt.strftime('%d/%m/%Y')`.
+
+3. **Conversión de las columnas segunda y tercera a texto sin decimales**:
+    - Las columnas segunda y tercera se convierten a texto. Si la columna contiene valores flotantes, se eliminan los decimales convirtiendo el valor a entero.
+    - Se usa `astype(str)` para convertir los valores numéricos a cadenas de texto.
+    - La operación `lambda x: str(int(float(x))) if x else ""` asegura que los valores nulos sean reemplazados por una cadena vacía, y los valores flotantes son redondeados a enteros sin decimales.
+
+---
+
+## Ejemplo de uso
+
+```python
+import pandas as pd
+
+# Ejemplo de DataFrame
+data = {
+    'DATE_TRANSACTION': ['01/02/2024', '15/03/2024'],
+    'COLUMN_2': [1234.56, 7890.12],
+    'COLUMN_3': [2345.67, 1234.89]
+}
+
+df = pd.DataFrame(data)
+
+# Llamar a la función process_file
+df_procesado = process_file(df)
+
+print(df_procesado)
