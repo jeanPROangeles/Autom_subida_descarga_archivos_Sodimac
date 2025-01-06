@@ -37,7 +37,7 @@ pip install pandas pytz shareplum
 ```
 ---
 
-# Documentación del script para procesar y subir archivos a SharePoint
+# Documentación de `subir_archivos.py`
 
 Este script se encarga de procesar archivos Excel, realizar transformaciones y casteo en los datos, y luego cargar los resultados procesados en SharePoint. A continuación, se detalla cómo funciona el script, sus componentes principales y su flujo de ejecución.
 
@@ -64,3 +64,19 @@ Para instalar las dependencias necesarias, utiliza `pip`:
 
 ```bash
 pip install pandas shareplum urllib3 castear
+```
+## Función principal
+
+El script realiza el siguiente flujo de procesamiento de archivos:
+
+- `Conexión a SharePoint`: El script se conecta a SharePoint utilizando las credenciales configuradas en el código. Utiliza la librería shareplum para autenticar y establecer una conexión al sitio de SharePoint.
+
+- `Obtención de archivos desde SharePoint`: Los archivos que coincidan con el patrón de búsqueda (por ejemplo, que terminen en "2024") se descargan de la carpeta específica en SharePoint utilizando las rutas configuradas.
+
+- `Procesamiento de archivos Excel`: Una vez descargados los archivos, el script lee los archivos Excel y realiza una concatenación de los datos de múltiples archivos en un solo DataFrame. Esto permite combinar datos de diferentes fuentes o periodos.
+
+- `Casteo y transformación de datos`: Los datos concatenados se procesan para asegurar que tengan el formato correcto. Esto puede incluir la conversión de tipos de datos, limpieza de valores nulos o ajustes específicos a las necesidades del proceso de carga.
+
+- `Subida a SharePoint`: Después de realizar el procesamiento, los datos transformados se suben de nuevo a SharePoint. La subida se hace en fragmentos si el archivo es muy grande, utilizando la función de reintentos para manejar posibles fallos de red.
+
+- `Manejo de errores y reintentos`: Si se produce un error durante el proceso de carga, el script intenta cargar el archivo nuevamente en función de un sistema de reintentos. Esto ayuda a manejar interrupciones temporales en la conexión o problemas con SharePoint.
