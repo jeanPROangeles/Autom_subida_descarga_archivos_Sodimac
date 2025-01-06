@@ -35,6 +35,33 @@ Para instalar las dependencias necesarias, puedes usar el siguiente comando:
 ```bash
 pip install pandas pytz shareplum
 ```
+
+
+Este script automatiza el proceso de conexión a **SharePoint**, filtrado de archivos según un patrón específico y descarga de esos archivos a un directorio local. El script está diseñado para trabajar con archivos que contienen datos relevantes para proyectos específicos y organiza esos archivos en una estructura de carpetas local.
+
+---
+
+## Funcionalidades principales
+
+### 1. **Conexión a SharePoint**
+   El script establece una conexión con **SharePoint** a través de la librería `shareplum`. Utiliza un nombre de usuario y una contraseña para autenticarse y obtener una cookie de autenticación. Con esta cookie, se accede a un sitio específico de SharePoint para realizar operaciones como la obtención de archivos.
+
+### 2. **Filtrado de Archivos**
+   El script filtra los archivos en SharePoint que terminan en "2024" después del último guion bajo (`_`). Esto se logra mediante la función `filtrar_archivos`, que recorre todos los archivos en una carpeta de SharePoint y selecciona aquellos que cumplen con este patrón.
+
+### 3. **Creación de Carpeta Local**
+   Antes de descargar los archivos, el script asegura que el directorio de destino local exista. Si no existe, el script lo crea automáticamente. De esta forma, garantiza que los archivos descargados se almacenen en un lugar organizado y accesible.
+
+### 4. **Descarga de Archivos**
+   Una vez que los archivos son filtrados, el script los descarga a la carpeta local especificada. Utiliza la función `descargar_archivo` para realizar esta operación, que guarda los archivos desde SharePoint al sistema local.
+
+### 5. **Obtención y Descarga de Archivos desde Múltiples Rutas**
+   La función `obtener_y_descargar_archivos` recorre varias rutas predefinidas dentro de SharePoint, filtra los archivos según el patrón de "2024", y los descarga a la carpeta local correspondiente.
+
+### 6. **Estructura del Proyecto**
+   El script está organizado de manera que se pueden agregar nuevas rutas o patrones de filtrado de archivos sin modificar las funciones clave. Esto facilita la extensión y personalización del flujo de trabajo.
+
+
 ---
 
 # Documentación de `subir_archivos.py`
