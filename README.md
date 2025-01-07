@@ -482,4 +482,4 @@ Al finalizar la ejecución del script, verifica las carpetas donde los archivos 
 
 - Si el portal presenta cambios en su estructura o si las credenciales cambian, será necesario actualizar el código para reflejar estos cambios.
 - Asegúrate de tener la versión más reciente de ChromeDriver o EdgeDriver compatible con tu navegador.
-- Si el navegador no se inicia correctamente o el inicio de sesión falla, revisa las credenciales y la configuración del WebDriver.
+- Si el navegador no se inicia correctamente o el inicio de sesión falla, revisa las credenciales y la configuración del WebDriver..
